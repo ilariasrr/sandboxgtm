@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product | My Site</title>
+<link rel="stylesheet" href="style.css">
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+<!-- End Google Tag Manager -->
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<header>
+  <a href="index.html" class="logo"><span class="dot"></span>My Site</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="products.html" class="active">Products</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <p><a href="products.html">&larr; Back to products</a></p>
+  <div id="product-detail">
+    <p class="subtitle">Loading product…</p>
+  </div>
+</main>
+
+<footer>
+  &copy; 2026 My Site. Built with GitHub Pages.
+</footer>
+
+<script src="products-data.js"></script>
+<script>
+  function formatPrice(value, currency) {
+    try {
+      return new Intl.NumberFormat("en-US", { style: "currency", currency: currency }).format(value);
+    } catch (e) {
+      return value + " " + currency;
+    }
+  }
+
+  var params = new URLSearchParams(location.search);
+  var id = params.get("id");
+  var product = PRODUCTS.find(function (p) { return p.id === id; });
+  var container = document.getElementById("product-detail");
+
+  if (!product) {
+    container.innerHTML =
+      '<div class="left-bar"><h1>Product not found</h1>' +
+      '<p>No product matches id "' + (id || "") + '". <a href="products.html">See all products</a>.</p></div>';
+  } else {
+    document.title = product.name + " | My Site";
+
+    var priceHtml = product.discounted_price
+      ? '<span class="product-price-old">' + formatPrice(product.price, product.currency) + '</span> ' +
+        '<span class="product-price">' + formatPrice(product.discounted_price, product.currency) + '</span>'
+      : '<span class="product-price">' + formatPrice(product.price, product.currency) + '</span>';
+
+    container.innerHTML =
+      '<div class="product-detail-grid">' +
+        '<img class="product-detail-img" src="' + product.image_url + '" alt="' + product.name + '">' +
+        '<div class="left-bar">' +
+          '<span class="tag">' + product.category + '</span>' +
+          '<h1>' + product.name + '</h1>' +
+          '<div class="product-price-row">' + priceHtml + '</div>' +
+          '<p>' + product.description + '</p>' +
+          '<p>' + (product.in_stock ? '<span class="product-in-stock">In stock</span>' : '<span class="product-oos">Out of stock</span>') + '</p>' +
+        '</div>' +
+      '</div>';
+
+    // ---- GTM custom event: product page view ----
+    // Pushed to the dataLayer for GTM to pick up with a Custom Event trigger
+    // named "product_page_view". Map these fields to GTM Data Layer Variables,
+    // then use them in your tags (GA4, Ads, etc).
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "product_page_view",
+      page_url: location.href,
+      page_type: "product",
+      product_id: product.id,
+      product_name: product.name,
+      product_price: product.price,
+      product_currency: product.currency,
+      product_image_url: product.image_url,
+      product_category: product.category,
+      product_discounted_price: product.discounted_price,
+      product_in_stock: product.in_stock,
+    });
+  }
+</script>
+
+</body>
+</html>

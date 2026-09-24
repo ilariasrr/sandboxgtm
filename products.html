@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products | My Site</title>
+<link rel="stylesheet" href="style.css">
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+<!-- End Google Tag Manager -->
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<header>
+  <a href="index.html" class="logo"><span class="dot"></span>My Site</a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="products.html" class="active">Products</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <div class="left-bar">
+    <span class="tag">Products</span>
+    <h1>Our products</h1>
+    <p class="subtitle">Test catalog used to try out product-page tracking.</p>
+  </div>
+
+  <div class="product-grid" id="product-grid"></div>
+</main>
+
+<footer>
+  &copy; 2026 My Site. Built with GitHub Pages.
+</footer>
+
+<script src="products-data.js"></script>
+<script>
+  function formatPrice(value, currency) {
+    try {
+      return new Intl.NumberFormat("en-US", { style: "currency", currency: currency }).format(value);
+    } catch (e) {
+      return value + " " + currency;
+    }
+  }
+
+  var grid = document.getElementById("product-grid");
+
+  grid.innerHTML = PRODUCTS.map(function (p) {
+    var priceHtml = p.discounted_price
+      ? '<span class="product-price-old">' + formatPrice(p.price, p.currency) + '</span> ' +
+        '<span class="product-price">' + formatPrice(p.discounted_price, p.currency) + '</span>'
+      : '<span class="product-price">' + formatPrice(p.price, p.currency) + '</span>';
+
+    var stockHtml = p.in_stock
+      ? '<span class="product-in-stock">In stock</span>'
+      : '<span class="product-oos">Out of stock</span>';
+
+    return (
+      '<a class="product-card" href="product.html?id=' + p.id + '">' +
+        '<img class="product-card-img" src="' + p.image_url + '" alt="' + p.name + '">' +
+        '<div class="product-card-body">' +
+          '<span class="tag">' + p.category + '</span>' +
+          '<h3>' + p.name + '</h3>' +
+          '<div class="product-price-row">' + priceHtml + '</div>' +
+          stockHtml +
+        '</div>' +
+      '</a>'
+    );
+  }).join("");
+</script>
+
+</body>
+</html>
